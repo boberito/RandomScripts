@@ -1,8 +1,11 @@
 #!/usr/bin/python
 
-
 import os
 import csv
+
+#Read a text file that'll be the body of the message
+#read a csv file that's in the format FULL_NAME, "TO EMAIL ADDRESS, CC EMAIL ADDRESS 1, CC EMAIL ADDRESS 2, etc"
+#Puts it all together and emails out
 
 EmailText=open("EmailBody.txt","r")
 reader = csv.reader(open('emaillist.csv', 'rU'), dialect=csv.excel_tab, quotechar='"')
