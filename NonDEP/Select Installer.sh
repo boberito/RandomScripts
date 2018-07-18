@@ -2,16 +2,17 @@
 
 ###Location of Package to be installed post HS Install
 ###If ran as a policy set the location of the package in the first argument, field $4
-###Or hard code the location below
+###You can pass the location as an argument, hard code the location below, or pick it through a dialog.
+##if passed as an argument it must be quoted ex: "/My Path/To My/Package.pkg"
 ###If jamf helper is found then do things the jamf way because most likely this was ran through Self Service and as a Jamf policy
 
 if [ "$4" != "" ]; then
     packageLocation="$4"
 else
+    #Change $1 to whatever the location is if you wanna hardcode it.
     packageLocation="$1"
 fi
 
-#packageLocation=""
 
 ####Locate jamfHelper
 jamfHelper="/Library/Application Support/JAMF/bin/jamfHelper.app/Contents/MacOS/jamfHelper"
