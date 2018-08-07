@@ -9,9 +9,8 @@
 #
 ####################################################################################################
 #
-#
-# Not my script. But super useful and I wanted to store it somewhere.
-#
+#   14-Dec-2017 (bkp): Updated to support $0 with spaces in path
+#   Peter Loobuyck grabbed bits from the net 
 #
 ####################################################################################################
 
@@ -21,14 +20,16 @@ volname="Flash"
 logfile="/Library/Logs/FlashUpdateScript.log"
 srcPath=`/usr/bin/dirname "${0}"`
 
+
     latestver=`/usr/bin/curl --connect-timeout 8 --max-time 8 -sf "http://fpdownload2.macromedia.com/get/flashplayer/update/current/xml/version_en_mac_pl.xml" 2>/dev/null | xmllint --format - 2>/dev/null | awk -F'"' '/<update version/{print $2}' | sed 's/,/./g'`
     # Get the version number of the currently-installed Flash Player, if any.
     shortver=${latestver:0:2}
     url="https://fpdownload.adobe.com/get/flashplayer/pdc/"$latestver"/install_flash_player_osx.dmg"
-    currentinstalledver=`/usr/bin/defaults read "/Library/Internet Plug-Ins/Flash Player.plugin/Contents/version" CFBundleShortVersionString`
-    #else
-    #   currentinstalledver="none"
-    #fi
+    if [ -d "/Library/Internet Plug-Ins/Flash Player.plugin/" ]; then
+	    currentinstalledver=`/usr/bin/defaults read "/Library/Internet Plug-Ins/Flash Player.plugin/Contents/version" CFBundleShortVersionString`
+    else
+       currentinstalledver="none"
+    fi
     # Compare the two versions, if they are different of Flash is not present then download and install the new version.
     if [ "${currentinstalledver}" != "${latestver}" ]; then
         /bin/echo "`date`: Current Flash version: ${currentinstalledver}" >> ${logfile}
