@@ -28,7 +28,8 @@ srcPath=`/usr/bin/dirname "${0}"`
     if [ -d "/Library/Internet Plug-Ins/Flash Player.plugin/" ]; then
 	    currentinstalledver=`/usr/bin/defaults read "/Library/Internet Plug-Ins/Flash Player.plugin/Contents/version" CFBundleShortVersionString`
     else
-       currentinstalledver="none"
+    	echo "`date`: Current Flash version: Flash Not Currently Installed" >> ${logfile}
+       	currentinstalledver="none"
     fi
     # Compare the two versions, if they are different of Flash is not present then download and install the new version.
     if [ "${currentinstalledver}" != "${latestver}" ]; then
