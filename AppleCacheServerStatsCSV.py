@@ -1,12 +1,26 @@
 #!/usr/bin/python
 ##################################################################
-#Makes a CSV of the date, total amount served, cached served, and downloaded from apple
+#Makes a CSV of the total amount served, cached served, and downloaded from apple
 #Make a launchdaemon for it to run right after midnight sometime.
 ##################################################################
 
 import subprocess
 import StringIO
 from datetime import date, timedelta
+
+def sizeConvert(label,size):
+    if label == "bytes":
+        if size == "0":
+            return 0
+        else:
+            return (float(size)/1024/1024/1024)
+    if label == "KB":
+        return (float(size)/1024/1024)
+    if label == "MB":
+        return (float(size)/1024)
+    if label == "GB":
+        return float(size)
+    
 
 outputfile = open("/Users/Shared/output.csv", "a")
 
@@ -21,36 +35,10 @@ appledownload = 0
 
 for x in rawLog:
     linesplit = str.split(x)
-    if linesplit[16] == "bytes;":
-        if linesplit[15] != "0":
-            total = total + (float(linesplit[15])/1024/1024/1024)
-    if linesplit[16] == "KB;":
-        total = total + (float(linesplit[15])/1024/1024)
-    if linesplit[16] == "MB;":
-        total = total + (float(linesplit[15])/1024)
-    if linesplit[16] == "GB;":
-        total = total + float(linesplit[15])
+    total = total + sizeConvert(linesplit[16][:-1], linesplit[15])
+    localcache = localcache + sizeConvert(linesplit[18],linesplit[17])
+    appledownload = appledownload + sizeConvert(linesplit[22],linesplit[21])
     
-    if linesplit[18] == "bytes":
-        if linesplit[17] != "0":
-            localcache = localcache + (float(linesplit[17])/1024/1024/1024)
-    if linesplit[18] == "KB":
-        localcache = localcache + (float(linesplit[17])/1024/1024)
-    if linesplit[18] == "MB":
-        localcache = localcache + (float(linesplit[17])/1024)
-    if linesplit[18] == "GB":
-        localcache = localcache + float(linesplit[17])
-    
-    if linesplit[22] == "bytes":
-        if linesplit[21] != "0":
-            appledownload = appledownload + (float(linesplit[21])/1024/1024/1024)
-    if linesplit[22] == "KB":
-        appledownload = appledownload + (float(linesplit[21])/1024/1024)
-    if linesplit[22] == "MB":
-        appledownload = appledownload + (float(linesplit[21])/1024)
-    if linesplit[22] == "GB":
-        appledownload = appledownload + float(linesplit[21])
-
 yesterday = date.today() - timedelta(1)
 yesterday.strftime('%Y-%m-%d')
 
