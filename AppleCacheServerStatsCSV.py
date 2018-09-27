@@ -1,11 +1,12 @@
 #!/usr/bin/python
 ##################################################################
-#Makes a CSV of the amount served and downloaded from apple and date
+#Makes a CSV of the total amount served, cached served, and downloaded from apple
 #Make a launchdaemon for it to run right after midnight sometime.
 ##################################################################
 
 import subprocess
 import StringIO
+from datetime import date, timedelta
 
 outputfile = open("/Users/Shared/output.csv", "a")
 
@@ -49,7 +50,10 @@ for x in rawLog:
         appledownload = appledownload + (float(linesplit[21])/1024)
     if linesplit[22] == "GB":
         appledownload = appledownload + float(linesplit[21])
-	
-output = "%.2f,%.2f,%.2f\n" % (round(total,2), round(localcache,2), round(appledownload,2))
+
+yesterday = date.today() - timedelta(1)
+yesterday.strftime('%Y-%m-%d')
+
+output = "%s, %.2f,%.2f,%.2f\n" % (yesterday, round(total,2), round(localcache,2), round(appledownload,2))
 outputfile.write(output)
 outputfile.close()
