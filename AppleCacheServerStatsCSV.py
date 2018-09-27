@@ -24,7 +24,6 @@ def sizeConvert(label,size):
 outputfile = open("/Users/Shared/output.csv", "a")
 
 command = "log show  --predicate \'subsystem == \"com.apple.AssetCache\"\' --debug --info --start \"$(date -v -1d \"+%Y-%m-%d\")\" --end \"$(date \"+%Y-%m-%d\")\" | grep \"Served all\""
-
 cacheoutput = subprocess.check_output(command, shell=True)
 rawLog = StringIO.StringIO(cacheoutput)
 
