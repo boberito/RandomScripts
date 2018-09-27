@@ -1,6 +1,6 @@
 #!/usr/bin/python
 ##################################################################
-#Makes a CSV of the total amount served, cached served, and downloaded from apple
+#Makes a CSV of the date, total amount served, cached served, and downloaded from apple
 #Make a launchdaemon for it to run right after midnight sometime.
 ##################################################################
 
