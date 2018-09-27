@@ -21,7 +21,6 @@ def sizeConvert(label,size):
     if label == "GB":
         return float(size)
     
-
 outputfile = open("/Users/Shared/output.csv", "a")
 
 command = "log show  --predicate \'subsystem == \"com.apple.AssetCache\"\' --debug --info --start \"$(date -v -1d \"+%Y-%m-%d\")\" --end \"$(date \"+%Y-%m-%d\")\" | grep \"Served all\""
