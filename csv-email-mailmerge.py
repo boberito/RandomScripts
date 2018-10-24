@@ -24,7 +24,7 @@ for row in reader:
 	#print StudentEmail
 	EmailBody = FirstName + ",\n" + EmailText.read()
 	#print FirstName + "\n" + EmailBody.read()
-	myCommand = "echo \"" + EmailBody + "\" | mail -s 'Please Come by St. Andrews Tech Department' -c \""+ ParentEmails +"\" \""+ StudentEmail+"\""
+	myCommand = "echo \"" + EmailBody + "\" | mail -s 'Please Come by the Tech Department' -c \""+ ParentEmails +"\" \""+ StudentEmail+"\""
 	os.system(myCommand)
 	print myCommand
 
