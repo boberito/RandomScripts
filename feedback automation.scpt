@@ -3,7 +3,7 @@ tell application "System Events"
 		tell application "System Preferences"
 			activate
 			set current pane to pane id "com.apple.preference.security"
-			display dialog "This script requires access for assistive evices be enabled." & return & return & "To continue, click the OK button and allow Accessiblity in the Privacy tab" with icon 1
+			display dialog "This script requires access for assistive devices be enabled." & return & return & "To continue, click the OK button and allow Accessiblity in the Privacy tab" with icon 1
 		end tell
 		delay 1
 	end if
