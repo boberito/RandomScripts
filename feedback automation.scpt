@@ -2,10 +2,12 @@
 --Must give access to Accessibility access for Script Editor or the application bundle.
 --I decided it's safer to pile up the windows instead of automating the final submit, that way you can edit the ticket if changes are needed or more information is needed to be included.
 
---Reads in a csv in format title,section,type of feedback,body
+--Reads in a csv in format title,section,type of feedback,body,yes/no
+--if no it'll skip the system report business and submit without it.
 --no return line at the end of the csv
 
 
+--Must give access to 
 tell application "System Events"
 	if UI elements enabled is false then
 		tell application "System Preferences"
@@ -27,11 +29,13 @@ repeat with thisRecord in csvRecords
 	set area_issue to item 2 of recordItems
 	set type_of_report to item 3 of recordItems
 	set feedback to item 4 of recordItems
+	set sys_report to item 5 of recordItems
 	
 	tell application "Feedback Assistant"
 		activate
 	end tell
 	delay 3
+	
 	
 	tell application "System Events"
 		tell process "Feedback Assistant"
@@ -58,14 +62,24 @@ repeat with thisRecord in csvRecords
 			set value of text area 1 of scroll area 1 of scroll area 1 of window "Problem Report Draft" to feedback
 			click button "Continue" of window "Problem Report Draft"
 			delay 1
-			do shell script "while [[ $(ps aux | grep appleseed | grep -v grep) || $(ps aux | grep system_profiler | grep -v grep) ]]; do sleep 1; done"
-			delay 1
-			--random return key since occassionally you get a dialog box pop up that might bomb out everything
-			key code 76
-			delay 1
-			click button 4 of window 1
-			--uncomment if you want full automatted submitting of tickets.
-			--click button "Submit" of window 1
+			--			do shell script "echo \"continue\" >> /Users/Shared/log.txt"
+			
+			if sys_report is "no" then
+				delay 2
+				click button "Continue" of window 1
+				--do shell script "echo \"button 4 pushed\" >> /Users/Shared/log.txt"
+				click button "Submit" of window 1
+				do shell script "echo \"submit pushed\" >> /Users/Shared/log.txt"
+				--click button "Submit Without Files" of sheet 1 of window 1
+				do shell script "echo \"submit without files\" >> /Users/Shared/log.txt"
+				delay 2
+			else
+				do shell script "echo \"sys_report isnt equaling no\" >> /Users/Shared/log.txt"
+				do shell script "while [[ $(ps aux | grep appleseed | grep -v grep) || $(ps aux | grep system_profiler | grep -v grep) ]]; do sleep 1; done"
+				delay 2
+				click button 4 of window 1
+				delay 2
+			end if
 			
 		end tell
 	end tell
