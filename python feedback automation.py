@@ -4,7 +4,7 @@
 # Options to run with this script
 # -h, help
 # -s, submit to auto submit Feedback tickets
-# -a, create email to Applecare
+# -a, create email to Applecare - currently only works with Apple Mail
 # Point the script to the rules file and have fun submitting feedback and tickets!
 
 import argparse
