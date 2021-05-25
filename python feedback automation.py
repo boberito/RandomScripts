@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # This script takes input from the macOS Security Compliance Project.
 # It will parse the rule files and generate Feedback and AppleCare Enterprise tickets for rules that are not controlled by Configuration Profile.
 # Options to run with this script
