@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 # This script takes input from the macOS Security Compliance Project.
+# Requires pyyaml package
 # It will parse the rule files and generate Feedback and AppleCare Enterprise tickets for rules that are not controlled by Configuration Profile.
 # Options to run with this script
 # -h, help
 # -s, submit to auto submit Feedback tickets
 # -a, create email to Applecare - currently only works with Apple Mail
-# Point the script to the rules file and have fun submitting feedback and tickets!
+# Point the script to a folder within rules folder and have fun submitting feedback and tickets!
+# For example run it ./pyAScript.py /macos_security/rules/os -a "support email @ apple.com" -s Yes or -s No
 
 import argparse
 import sys
@@ -37,6 +39,7 @@ end tell
 set autoSubmit to "{}"
 set applecareEmail to "{}"
 
+
 tell application "Feedback Assistant"
     activate
 end tell
@@ -44,52 +47,54 @@ end tell
 delay 5
 
 tell application "System Events"
-    tell process "Feedback Assistant"
-        set frontmost to true
-        click menu item "New Feedback" of menu "File" of menu bar 1
-        delay 1
-        key code 125
-        delay 1
-        key code 76
-        delay 2
-        -- set value of text field 1 of scroll area 1 of window "Problem Report Draft" to item 1 of myList
-        set value of text field 1 of scroll area 1 of window 1 to "{}"
-        delay 4
-        -- tell pop up button 1 of scroll area 1 of window "Problem Report Draft"
-        tell pop up button 1 of scroll area 1 of window 1
-            click
-            keystroke "{}"
-            -- arg2
-            key code 76
-        end tell
-        --tell pop up button 2 of scroll area 1 of window "Problem Report Draft"
-        tell pop up button 2 of scroll area 1 of window 1
-            click
-            keystroke "{}"
-            --arg 3
-            key code 76
-        end tell
-        -- set value of text area 1 of scroll area 1 of scroll area 1 of window "Problem Report Draft" to item 4 of myList
-        set value of text area 1 of scroll area 1 of scroll area 1 of window 1 to x
-        --click button "Continue" of window "Problem Report Draft"
-        click button "Continue" of window 1
-        delay 1
-        if "{}" is equal to "no" then
-            delay 2
-            click button "Continue" of window 1
-            if autoSubmit = "Yes" then
-                click button "Submit" of window 1
-                click button "Submit Without Files" of sheet 1 of window 1
-                
-            end if
-            delay 2
-        else
-            do shell script "while [[ $(ps aux | grep appleseed | grep -v grep) || $(ps aux | grep system_profiler | grep -v grep) ]]; do sleep 1; done"
-            delay 2
-            click button 4 of window 1
-            delay 2
-        end if
-    end tell
+	tell process "Feedback Assistant"
+		set frontmost to true
+		click menu item "New Feedback" of menu "File" of menu bar 1
+		delay 1
+		--		key code 125
+		delay 1
+		key code 76
+		delay 2
+		-- set value of text field 1 of scroll area 1 of window "Problem Report Draft" to item 1 of myList
+		set value of text field 1 of scroll area 1 of window 1 to "{}"
+		delay 4
+		-- tell pop up button 1 of scroll area 1 of window "Problem Report Draft"
+		tell pop up button 1 of scroll area 1 of window 1
+			click
+			keystroke "{}"
+			-- arg2
+			key code 76
+		end tell
+		--tell pop up button 2 of scroll area 1 of window "Problem Report Draft"
+		tell pop up button 2 of scroll area 1 of window 1
+			click
+			keystroke "{}"
+			--arg 3
+			key code 76
+		end tell
+		-- set value of text area 1 of scroll area 1 of scroll area 1 of window "Problem Report Draft" to item 4 of myList
+		set value of text area 1 of scroll area 1 of scroll area 1 of window 1 to x
+		--click button "Continue" of window "Problem Report Draft"
+		delay 3
+		click button "Submit" of window 1
+		set value of text field 1 of scroll area 1 of window 1 to "{}"
+		click button "Submit" of window 1
+		if autoSubmit is equal to "yes" then
+			delay 2
+			if "{}" is equal to "no" then
+				
+				click button "Submit Without Required Files" of sheet 1 of window 1
+				
+				
+				delay 2
+			else
+				click button "Gather Diagnostics and Submit" of sheet 1 of window 1
+                delay 2
+			end if
+		end if
+		
+	end tell
+
     if applecareEmail is not equal to "none" then
         tell application "Mail"
             set theSubject to "Priority: Low. {} - {}"
@@ -102,7 +107,7 @@ tell application "System Events"
 
 end tell
 end run
-    '''.format(auto,email,title,section,feedbackType, sysreport, title, feedbackType)
+    '''.format(auto.lower(),email,title,section,feedbackType, title, sysreport.lower(), feedbackType, title)
 
     # print(scrpt)
     # print()
@@ -111,12 +116,15 @@ end run
     args = [feedback]
     p = Popen(['osascript', '-'] + args, stdin=PIPE, stdout=PIPE, stderr=PIPE, universal_newlines=True)
     stdout, stderr = p.communicate(scrpt)
+    print(stdout)
+    print(stderr)
     # print (p.returncode, stdout, stderr)
 
 def main():
     defaultsWrite = 'defaults write com.apple.appleseed.FeedbackAssistant Autogather -bool NO'.split()
     subprocess.call(defaultsWrite)
-
+    defaultsWrite = 'defaults write com.apple.appleseed.FeedbackAssistant FBASuppressPrivacyNotice -bool YES'.split()
+    subprocess.call(defaultsWrite)
     section = "Client Management"
     feedbackType = "Suggestion"
     sysreport = "no"
@@ -181,7 +189,7 @@ Thank you
 -- 
 
         '''.format(rule_yaml['discussion'].replace("_MUST_", "MUST"), rule_yaml['fix'], rule_yaml['check'], str(rule_yaml['references']['800-53r4']).replace("[","").replace("]",""))
-
+        
         print(rule_yaml['id'])
         applescripty(results.submit, results.applecare, subject,section,feedbackType,description,sysreport)
 
