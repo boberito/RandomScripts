@@ -1,0 +1,40 @@
+Federal and Regulatory Compliance requirements for endpoint auditing
+
+#mscp- mandatory compliance requirements
+Summary:
+The deprecation of auditd (openBSM), which was first identified in macOS 11 Big Sur, introduces a gap with how macOS can natively meet the compliance and cyber insurance requirements for systems on federal, regulated industry, enterprise, healthcare, and education networks as it relates to auditing and logging requirements.  NIST SP 800-53r5 identifies  the Security and Privacy Controls to be considered when protecting organizational operations and assets from a diverse set of threats and risks. Specific requirements outlined in Executive Order M-21-31 dictate how endpoints are expected to collect, retain and protect event audit information in order to address cybersecurity concerns against the threat landscape of modern computing systems. 
+ 
+Scope:
+macOS systems connected to federal networks; macOS systems within industry which have to meet regulatory requirements; and high valued assets within any enterprise environment.
+
+federal, regulated industry, enterprise, healthcare, education, and industry systems that are part of the federal supply chain
+
+ 
+Request:
+Apple to provide a solution that is included with macOS meets the following design requirements:
+            - provides persistent log output from initial startup to shutdown
+            - allows custom options for retention of the log output
+            - ability to securely offload the log output to an external system using standards (AJAX)
+            - protect the confidentiality, accessibility and integrity of the log output on the client system
+            - allows for customization of which events to be logged from Endpoint Security
+            - supports inclusion of client log files stored on the local file system
+            - supports inclusion of custom predicate queries to Unified Logging
+            - all requirements configurable via .mobileconfig
+
+The design requirements are intended to meet the guidance provided by NIST SP 800-53r5, in particular the following controls:
+AU-2 Auditable Events
+AU-3 Content of Audit Records
+AU-4 Audit Storage Capacity
+AU-5 Response to Audit Processing Failures  
+AU-6 Audit Review, Analysis, and Reporting  
+AU-7 Audit Reduction and Report Generation  
+AU-8 Time Stamps   
+AU-9 Protection of Audit Information
+AU-10 Non-repudiation 
+AU-11 Audit Record Retention 
+AU-12 Audit Generation  
+
+This also impacts compliance requires for SOC 2, ISO 27001, ISO 27002, CMMC, HIPAA, compliance in EMEA and APAC regions. Additionally, this may impact customers with cyber security insurance requirements.
+
+Impact:
+Without a native tool provided by Apple, organizations are required to seek third-party solutions to meet the regulatory compliance needs outlined by federal requirements.  This introduces additional hidden costs to deploy macOS and increases complexity for system owners and administrators throughout the Federal government. Third party tools may not ship on time, often delaying new OS and hardware adoption by months.This also potentially impacts the user as additional agents are required to be installed on a system, and potentially adds organizational risk, making the Mac less attractive as an endpoint.
